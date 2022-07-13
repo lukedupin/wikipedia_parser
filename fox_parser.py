@@ -3,6 +3,12 @@
 import os, sys
 from html.parser import HTMLParser
 
+if len(sys.argv) == 1:
+    print(" # Example usage")
+    print("wget https://www.foxbusiness.com/economy/inflation-surges-june-hitting-new-40-year-high")
+    print(f"Usage: {sys.argv[0]} inflation-surges-june-hitting-new-40-year-high")
+    exit()
+
 class FoxParser(HTMLParser):
     def __init__(self):
         super().__init__()
