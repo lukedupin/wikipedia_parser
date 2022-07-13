@@ -5,11 +5,11 @@ from html.parser import HTMLParser
 
 if len(sys.argv) == 1:
     print(" # Example usage")
-    print("wget https://www.foxbusiness.com/economy/inflation-surges-june-hitting-new-40-year-high")
-    print(f"Usage: {sys.argv[0]} inflation-surges-june-hitting-new-40-year-high")
+    print('wget "https://www.msn.com/en-us/news/politics/frustrated-trump-is-watching-every-hearing-and-asking-confidants-when-they-are-going-to-end-cnns-kaitlan-collins/ar-AAZuY8z?li=BBnbfcL"')
+    print(f"Usage: {sys.argv[0]} ar-AAZuY8z\?li=BBnbfcL")
     exit()
 
-class FoxParser(HTMLParser):
+class MsnParser(HTMLParser):
     def __init__(self):
         super().__init__()
         self.found_article = False
@@ -25,7 +25,7 @@ class FoxParser(HTMLParser):
 
         else:
             for attr in attrs:
-                if attr[0] == 'class' and attr[1] == 'article-body':
+                if attr[0] == 'data-aop' and attr[1] == 'articlebody':
                     self.found_article = True
                     self.depth = 0
                     print("**** Found start of artcle")
@@ -47,7 +47,7 @@ class FoxParser(HTMLParser):
 
 with open(sys.argv[1]) as handle:
     content = handle.read()
-    parser = FoxParser()
+    parser = MsnParser()
     parser.feed( content )
     
     # <div class="article-body">
