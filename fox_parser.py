@@ -3,22 +3,17 @@
 import os, sys
 from html.parser import HTMLParser
 
-if len(sys.argv) == 1:
-    print(" # Example usage")
-    print("wget https://www.foxbusiness.com/economy/inflation-surges-june-hitting-new-40-year-high")
-    print(f"Usage: {sys.argv[0]} inflation-surges-june-hitting-new-40-year-high")
-    exit()
-
 class FoxParser(HTMLParser):
     def __init__(self):
         super().__init__()
         self.found_article = False
         self.depth = 0
+        self.data = None
 
     def handle_starttag(self, tag, attrs):
         if self.found_article:
             ws = ''.join(['    ' for _ in range(self.depth)])
-            print(f"{ws}[START {tag}]")
+            #print(f"{ws}[START {tag}]")
 
             if tag not in ('img', 'source'):
                 self.depth += 1
@@ -28,7 +23,8 @@ class FoxParser(HTMLParser):
                 if attr[0] == 'class' and attr[1] == 'article-body':
                     self.found_article = True
                     self.depth = 0
-                    print("**** Found start of artcle")
+                    #print("**** Found start of artcle")
+
 
     def handle_endtag(self, tag):
         if self.found_article:
@@ -39,15 +35,31 @@ class FoxParser(HTMLParser):
 
             else:
                 ws = ''.join(['    ' for _ in range(self.depth)])
-                print(f"{ws}[END {tag}]")
+                #print(f"{ws}[END {tag}]")
 
     def handle_data(self, data):
         if self.found_article:
-            print(data)
+            self.data = data
 
-with open(sys.argv[1]) as handle:
-    content = handle.read()
-    parser = FoxParser()
-    parser.feed( content )
-    
+    def get_data(self):
+        return self.data
+
+#Program begins here, if running standalone
+if __name__ == '__main__':
+
+    if len(sys.argv) == 1:
+        print(" # Example usage")
+        print("wget https://www.foxbusiness.com/economy/inflation-surges-june-hitting-new-40-year-high")
+        print(f"Usage: {sys.argv[0]} inflation-surges-june-hitting-new-40-year-high")
+        exit()
+
+    with open(sys.argv[1]) as handle:
+        content = handle.read()
+        parser = FoxParser()
+        parser.feed( content )
+
+
+
+
+
     # <div class="article-body">
