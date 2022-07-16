@@ -3,6 +3,8 @@ from msn_parser import MsnParser
 import csv
 import multiprocessing as mp
 import urllib.request
+import ssl
+
 
 #Description: Open the CSV file of targets (line delimited) and create a list of URL's to parse
 def get_url_list( target_path ):
@@ -16,7 +18,8 @@ def get_url_list( target_path ):
 def download_file_from_url(url):
     raw_data = None
     try:
-        with urllib.request.urlopen(url) as f:
+        context = ssl._create_unverified_context()
+        with urllib.request.urlopen(url,context=context) as f:
             raw_data = f.read().decode('utf-8')
     except urllib.error.URLError as e:
         print(e.reason)
